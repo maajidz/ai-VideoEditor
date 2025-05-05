@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review and Edit Final Video</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#6366f1',secondary:'#8b5cf6'},borderRadius:{'none':'0px','sm':'8px',DEFAULT:'12px','md':'16px','lg':'20px','xl':'24px','2xl':'28px','3xl':'32px','full':'9999px','button':'12px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background-color: #0f172a;
+color: #e2e8f0;
+}
+.timeline-segment {
+position: relative;
+height: 24px;
+cursor: pointer;
+transition: all 0.2s;
+}
+.timeline-segment:hover {
+transform: translateY(-2px);
+}
+.timeline-marker {
+position: absolute;
+width: 4px;
+height: 12px;
+top: -12px;
+transform: translateX(-50%);
+}
+.timeline-thumbnail {
+position: absolute;
+bottom: 32px;
+transform: translateX(-50%);
+display: none;
+z-index: 10;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+.timeline-segment:hover .timeline-thumbnail {
+display: block;
+}
+.video-controls {
+opacity: 0;
+transition: opacity 0.3s;
+}
+.video-container:hover .video-controls {
+opacity: 1;
+}
+input[type="range"] {
+-webkit-appearance: none;
+appearance: none;
+height: 4px;
+background: #4b5563;
+border-radius: 2px;
+outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 12px;
+height: 12px;
+background: #6366f1;
+border-radius: 50%;
+cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+width: 12px;
+height: 12px;
+background: #6366f1;
+border-radius: 50%;
+cursor: pointer;
+border: none;
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 40px;
+height: 20px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.switch-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #374151;
+transition: .4s;
+border-radius: 20px;
+}
+.switch-slider:before {
+position: absolute;
+content: "";
+height: 16px;
+width: 16px;
+left: 2px;
+bottom: 2px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .switch-slider {
+background-color: #6366f1;
+}
+input:checked + .switch-slider:before {
+transform: translateX(20px);
+}
+.command-input:focus {
+outline: none;
+box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+}
+.source-item {
+transition: all 0.2s;
+}
+.source-item:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.ai-suggestion {
+transition: all 0.2s;
+}
+.ai-suggestion:hover {
+transform: translateY(-2px);
+}
+.tool-icon {
+transition: all 0.2s;
+}
+.tool-icon:hover {
+transform: scale(1.1);
+}
+.tab-button {
+position: relative;
+}
+.tab-button.active::after {
+content: '';
+position: absolute;
+bottom: -10px;
+left: 0;
+width: 100%;
+height: 2px;
+background-color: #6366f1;
+}
+.caption-style {
+transition: all 0.2s;
+cursor: pointer;
+}
+.caption-style:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.caption-style.selected {
+border: 2px solid #6366f1;
+}
+.ai-assistant-button {
+position: fixed;
+bottom: 24px;
+right: 24px;
+z-index: 50;
+transition: all 0.3s;
+}
+.ai-assistant-button:hover {
+transform: scale(1.1);
+}
+</style>
+</head>
+<body>
+<div class="min-h-screen flex flex-col">
+<!-- Header -->
+<header class="bg-gray-900 border-b border-gray-800">
+<div class="container mx-auto px-4 py-3 flex items-center justify-between">
+<div class="flex items-center">
+<h1 class="text-2xl font-['Pacifico'] text-white mr-8">logo</h1>
+<nav class="hidden md:flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white transition">Projects</a>
+<a href="#" class="text-gray-400 hover:text-white transition">Templates</a>
+<a href="#" class="text-primary font-medium transition">Editor</a>
+<a href="#" class="text-gray-400 hover:text-white transition">Assets</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:text-white cursor-pointer">
+<i class="ri-notification-3-line"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:text-white cursor-pointer">
+<i class="ri-question-line"></i>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">JS</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col">
+<!-- Project Info Bar -->
+<div class="bg-gray-900 border-b border-gray-800 py-3">
+<div class="container mx-auto px-4 flex items-center justify-between">
+<div class="flex items-center">
+<h2 class="text-lg font-medium text-white mr-4">Podcast Episode #42 - AI in Content Creation</h2>
+<span class="text-sm text-gray-400">Last edited: 2 minutes ago</span>
+</div>
+<div class="flex items-center space-x-3">
+<button class="flex items-center space-x-1 bg-gray-800 hover:bg-gray-700 text-white px-3 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-share-line"></i>
+<span>Share</span>
+</button>
+<button class="flex items-center space-x-1 bg-primary hover:bg-primary/90 text-white px-4 py-1.5 rounded-button text-sm whitespace-nowrap">
+<i class="ri-download-line"></i>
+<span>Export</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Video Player Section -->
+<div class="bg-gray-900 py-6">
+<div class="container mx-auto px-4">
+<div class="video-container relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=professional%20podcast%20recording%20studio%20with%20two%20people%20having%20a%20conversation%2C%20high%20quality%20camera%20setup%2C%20multiple%20angles%2C%20professional%20lighting%2C%20microphones%20visible%2C%20modern%20studio%20environment%2C%20digital%20displays&width=1280&height=720&seq=1&orientation=landscape" alt="Video preview" class="w-full h-full object-cover">
+<!-- Video Controls -->
+<div class="video-controls absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill ri-lg"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white">
+<i class="ri-skip-back-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white">
+<i class="ri-skip-forward-line"></i>
+</button>
+<div class="flex items-center space-x-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white">
+<i class="ri-volume-up-line"></i>
+</button>
+<input type="range" min="0" max="100" value="80" class="w-20">
+</div>
+</div>
+<div class="flex items-center space-x-3 text-white">
+<span class="text-sm">12:34 / 58:21</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">
+<i class="ri-settings-3-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">
+<i class="ri-fullscreen-line"></i>
+</button>
+</div>
+</div>
+<div class="relative w-full h-1 bg-white/20 rounded-full overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[21%] bg-primary rounded-full"></div>
+<div class="absolute left-[21%] top-0 bottom-0 w-1 h-full bg-white rounded-full"></div>
+</div>
+</div>
+<!-- Annotation Toggle -->
+<div class="absolute top-4 right-4 flex items-center space-x-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-white text-sm">
+<span>Show Annotations</span>
+<label class="custom-switch">
+<input type="checkbox" checked>
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Section -->
+<div class="bg-gray-900 border-t border-b border-gray-800 py-4">
+<div class="container mx-auto px-4">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-white font-medium">Timeline</h3>
+<div class="flex items-center space-x-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300">
+<i class="ri-zoom-out-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300">
+<i class="ri-zoom-in-line"></i>
+</button>
+</div>
+</div>
+<div class="relative w-full h-24 bg-gray-800 rounded-lg overflow-hidden">
+<!-- Timeline Ruler -->
+<div class="absolute top-0 left-0 right-0 h-6 flex border-b border-gray-700">
+<div class="flex-1 flex">
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">00:00</div>
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">10:00</div>
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">20:00</div>
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">30:00</div>
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">40:00</div>
+<div class="w-1/6 border-r border-gray-700 text-xs text-gray-500 pl-1">50:00</div>
+<div class="w-1/6 text-xs text-gray-500 pl-1">1:00:00</div>
+</div>
+</div>
+<!-- Timeline Segments -->
+<div class="absolute top-6 left-0 right-0 bottom-0 flex">
+<!-- Intro Segment -->
+<div class="timeline-segment w-[8%] bg-blue-500/40 border-r border-gray-700">
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20intro%20screen%20with%20logo%20and%20host%20introduction%2C%20professional%20lighting%2C%20studio%20environment&width=160&height=90&seq=2&orientation=landscape" alt="Intro thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+Intro (0:00 - 4:45)
+</div>
+</div>
+</div>
+<!-- Topic 1 Segment -->
+<div class="timeline-segment w-[15%] bg-green-500/40 border-r border-gray-700">
+<div class="timeline-marker bg-blue-400"></div>
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=two%20people%20discussing%20in%20podcast%20studio%2C%20close%20up%20shot%2C%20animated%20conversation%2C%20professional%20lighting&width=160&height=90&seq=3&orientation=landscape" alt="Topic 1 thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+AI Basics (4:45 - 13:30)
+</div>
+</div>
+</div>
+<!-- Topic 2 Segment -->
+<div id="content-creation-segment" class="timeline-segment w-[18%] bg-purple-500/40 border-r border-gray-700 relative group transition-all hover:bg-purple-500/60" data-start="13:30" data-end="25:15">
+<div class="timeline-marker bg-orange-400"></div>
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20b-roll%20showing%20AI%20technology%20visualization%2C%20digital%20interface%2C%20data%20visualization&width=160&height=90&seq=4&orientation=landscape" alt="Topic 2 thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+Content Creation (13:30 - 25:15)
+</div>
+</div>
+<div class="context-menu hidden absolute top-full left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl z-50 py-1">
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-edit-line"></i>
+<span>Edit Segment</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-movie-line"></i>
+<span>Add B-Roll</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-text-spacing"></i>
+<span>Add Captions</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-image-edit-line"></i>
+<span>Change Thumbnail</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-scissors-cut-line"></i>
+<span>Split Segment</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2">
+<i class="ri-time-line"></i>
+<span>Adjust Duration</span>
+</button>
+<button class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2 text-red-400">
+<i class="ri-delete-bin-line"></i>
+<span>Delete Segment</span>
+</button>
+</div>
+</div>
+<!-- Interview Segment -->
+<div class="timeline-segment w-[22%] bg-yellow-500/40 border-r border-gray-700">
+<div class="timeline-marker bg-red-400"></div>
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20interview%20with%20guest%20expert%2C%20three%20people%20in%20conversation%2C%20professional%20studio%20setup%20with%20multiple%20camera%20angles&width=160&height=90&seq=5&orientation=landscape" alt="Interview thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+Expert Interview (25:15 - 38:30)
+</div>
+</div>
+</div>
+<!-- Topic 3 Segment -->
+<div class="timeline-segment w-[20%] bg-teal-500/40 border-r border-gray-700">
+<div class="timeline-marker bg-green-400"></div>
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20hosts%20discussing%20future%20technology%2C%20animated%20hand%20gestures%2C%20close%20up%20shot%20with%20shallow%20depth%20of%20field&width=160&height=90&seq=6&orientation=landscape" alt="Topic 3 thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+Future Trends (38:30 - 50:15)
+</div>
+</div>
+</div>
+<!-- Outro Segment -->
+<div class="timeline-segment w-[17%] bg-blue-500/40">
+<div class="timeline-marker bg-purple-400"></div>
+<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20outro%20with%20hosts%20concluding%20discussion%2C%20call%20to%20action%20graphics%2C%20professional%20lighting&width=160&height=90&seq=7&orientation=landscape" alt="Outro thumbnail" class="w-full h-full object-cover rounded">
+<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
+Conclusion (50:15 - 58:21)
+</div>
+</div>
+</div>
+</div>
+<!-- Current Position Indicator -->
+<div class="absolute top-0 bottom-0 left-[21%] w-0.5 bg-white z-10"></div>
+</div>
+</div>
+</div>
+<!-- Editing Tools Section -->
+<div class="flex-1 bg-gray-800">
+<div class="container mx-auto px-4 py-6">
+<div class="flex space-x-6">
+<!-- Left Column: Editing Panel -->
+<div class="w-2/3 bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+<!-- Editing Panel Tabs -->
+<div class="flex items-center border-b border-gray-800 px-4">
+<button class="tab-button active px-4 py-3 text-primary font-medium">AI Suggestions</button>
+<button class="tab-button px-4 py-3 text-gray-400 hover:text-white">Text Editor</button>
+<button class="tab-button px-4 py-3 text-gray-400 hover:text-white">Tools</button>
+</div>
+<!-- Command Bar -->
+<div class="p-4 border-b border-gray-800">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-command-line text-gray-400"></i>
+</div>
+<input type="text" class="command-input w-full bg-gray-800 border-none text-white px-10 py-3 rounded" placeholder="Type your edit command (e.g., 'add zoom at 12:34' or 'insert b-roll of technology')">
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+<i class="ri-mic-line text-gray-400 hover:text-white cursor-pointer"></i>
+</div>
+</div>
+<div class="mt-2 text-xs text-gray-500 flex items-center">
+<span class="mr-2">Try:</span>
+<div class="flex space-x-2">
+<span class="bg-gray-800 px-2 py-0.5 rounded">add caption at 12:34</span>
+<span class="bg-gray-800 px-2 py-0.5 rounded">enhance audio quality</span>
+<span class="bg-gray-800 px-2 py-0.5 rounded">insert transition</span>
+</div>
+</div>
+</div>
+<!-- AI Suggestions -->
+<div class="p-4 h-[calc(100%-140px)] overflow-y-auto">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-white font-medium">AI Suggestions</h3>
+<div class="flex items-center space-x-2">
+<span class="text-sm text-gray-400">Auto-apply</span>
+<label class="custom-switch">
+<input type="checkbox">
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+<!-- Suggestion Cards -->
+<div class="space-y-4">
+<!-- Suggestion 1 -->
+<div class="ai-suggestion bg-gray-800 rounded p-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500/20 text-blue-400 mr-3">
+<i class="ri-sound-module-line"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Enhance Audio Clarity</h4>
+<span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">Technical</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">Background noise detected at 12:34-15:20. Apply noise reduction to improve voice clarity.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>12:34 - 15:20</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-sm text-gray-400 hover:text-white">Preview</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-button text-sm whitespace-nowrap">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggestion 2 -->
+<div class="ai-suggestion bg-gray-800 rounded p-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-500/20 text-purple-400 mr-3">
+<i class="ri-movie-line"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Add B-Roll</h4>
+<span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">Visual</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">When discussing AI technologies at 25:40, add relevant B-roll footage to illustrate concepts.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>25:40 - 26:15</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-sm text-gray-400 hover:text-white">Preview</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-button text-sm whitespace-nowrap">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggestion 3 -->
+<div class="ai-suggestion bg-gray-800 rounded p-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-yellow-500/20 text-yellow-400 mr-3">
+<i class="ri-text-spacing"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Add Animated Captions</h4>
+<span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">Engagement</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">Key points at 38:45 would benefit from animated captions to emphasize important statistics.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>38:45 - 39:20</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-sm text-gray-400 hover:text-white">Preview</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-button text-sm whitespace-nowrap">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggestion 4 -->
+<div class="ai-suggestion bg-gray-800 rounded p-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500/20 text-green-400 mr-3">
+<i class="ri-camera-switch-line"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Switch Camera Angle</h4>
+<span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Visual</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">During the emotional discussion at 42:10, switch to close-up angle to capture reactions.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>42:10 - 43:35</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-sm text-gray-400 hover:text-white">Preview</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-button text-sm whitespace-nowrap">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Suggestion 5 -->
+<div class="ai-suggestion bg-gray-800 rounded p-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-red-500/20 text-red-400 mr-3">
+<i class="ri-scissors-cut-line"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Trim Silence</h4>
+<span class="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">Pacing</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">Extended pause detected at 18:20. Trim 3.5 seconds to improve pacing.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>18:20 - 18:24</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-sm text-gray-400 hover:text-white">Preview</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded-button text-sm whitespace-nowrap">Apply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Source Manager -->
+<div class="w-1/3 space-y-6">
+<!-- Source Manager -->
+<div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+<div class="flex items-center justify-between border-b border-gray-800 px-4 py-3">
+<h3 class="text-white font-medium">Source Assets</h3>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white">
+<i class="ri-add-line"></i>
+</button>
+</div>
+<div class="p-4 h-[300px] overflow-y-auto">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2">
+<button class="px-3 py-1 bg-primary text-white text-sm rounded-full">All</button>
+<button class="px-3 py-1 bg-gray-800 text-gray-400 text-sm rounded-full">Video</button>
+<button class="px-3 py-1 bg-gray-800 text-gray-400 text-sm rounded-full">Audio</button>
+<button class="px-3 py-1 bg-gray-800 text-gray-400 text-sm rounded-full">Images</button>
+</div>
+<div class="relative">
+<input type="text" class="bg-gray-800 border-none text-sm text-white pl-8 pr-3 py-1 rounded-full w-36" placeholder="Search assets">
+<div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-500 text-sm"></i>
+</div>
+</div>
+</div>
+<!-- Source Items -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Source 1 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video">
+<img src="https://readdy.ai/api/search-image?query=podcast%20recording%2C%20main%20camera%20angle%2C%20wide%20shot%20of%20two%20hosts&width=160&height=90&seq=8&orientation=landscape" alt="Main video" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/50 transition-opacity">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Main Camera (1:02:15)</h4>
+<p class="text-xs text-gray-500">Primary video</p>
+</div>
+</div>
+<!-- Source 2 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video">
+<img src="https://readdy.ai/api/search-image?query=podcast%20recording%2C%20close%20up%20angle%20of%20host%201%2C%20professional%20lighting&width=160&height=90&seq=9&orientation=landscape" alt="Host 1 closeup" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/50 transition-opacity">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Host 1 Closeup (1:02:15)</h4>
+<p class="text-xs text-gray-500">Angle 2</p>
+</div>
+</div>
+<!-- Source 3 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video">
+<img src="https://readdy.ai/api/search-image?query=podcast%20recording%2C%20close%20up%20angle%20of%20host%202%2C%20professional%20lighting&width=160&height=90&seq=10&orientation=landscape" alt="Host 2 closeup" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/50 transition-opacity">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Host 2 Closeup (1:02:15)</h4>
+<p class="text-xs text-gray-500">Angle 3</p>
+</div>
+</div>
+<!-- Source 4 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video bg-gray-700 flex items-center justify-center">
+<i class="ri-volume-up-line text-gray-500 text-2xl"></i>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Clean Audio Track (1:02:15)</h4>
+<p class="text-xs text-gray-500">Main audio</p>
+</div>
+</div>
+<!-- Source 5 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video">
+<img src="https://readdy.ai/api/search-image?query=digital%20technology%20visualization%2C%20abstract%20AI%20concept%2C%20blue%20tones&width=160&height=90&seq=11&orientation=landscape" alt="B-Roll tech" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/50 transition-opacity">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Tech B-Roll (0:45)</h4>
+<p class="text-xs text-gray-500">B-Roll</p>
+</div>
+</div>
+<!-- Source 6 -->
+<div class="source-item bg-gray-800 rounded overflow-hidden">
+<div class="relative aspect-video">
+<img src="https://readdy.ai/api/search-image?query=people%20using%20technology%2C%20content%20creation%2C%20modern%20devices&width=160&height=90&seq=12&orientation=landscape" alt="B-Roll content" class="w-full h-full object-cover">
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/50 transition-opacity">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-play-fill"></i>
+</button>
+</div>
+</div>
+<div class="p-2">
+<h4 class="text-sm text-white truncate">Content Creation B-Roll (1:20)</h4>
+<p class="text-xs text-gray-500">B-Roll</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Tools -->
+<div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+<div class="px-4 py-3 border-b border-gray-800">
+<h3 class="text-white font-medium">Quick Tools</h3>
+</div>
+<div class="p-4">
+<div class="grid grid-cols-4 gap-3">
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 mb-1">
+<i class="ri-scissors-cut-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Cut</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 mb-1">
+<i class="ri-transition-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Transition</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-500/20 text-yellow-400 mb-1">
+<i class="ri-text-spacing ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Captions</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-green-500/20 text-green-400 mb-1">
+<i class="ri-sound-module-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Audio</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-red-500/20 text-red-400 mb-1">
+<i class="ri-movie-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">B-Roll</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-teal-500/20 text-teal-400 mb-1">
+<i class="ri-camera-switch-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Angles</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-pink-500/20 text-pink-400 mb-1">
+<i class="ri-filter-3-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Effects</span>
+</div>
+<div class="tool-icon flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400 mb-1">
+<i class="ri-magic-line ri-lg"></i>
+</div>
+<span class="text-xs text-gray-400">Auto Fix</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl p-4">
+<div class="flex flex-col space-y-3">
+<button class="flex items-center justify-center space-x-2 bg-primary hover:bg-primary/90 text-white py-3 rounded-button whitespace-nowrap">
+<i class="ri-download-line"></i>
+<span>Export Final Video</span>
+</button>
+<button class="flex items-center justify-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-button whitespace-nowrap">
+<i class="ri-scissors-cut-line"></i>
+<span>Generate Short Clips</span>
+</button>
+<button class="flex items-center justify-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-button whitespace-nowrap">
+<i class="ri-save-line"></i>
+<span>Save Draft</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- AI Assistant Button -->
+<div class="ai-assistant-button w-14 h-14 flex items-center justify-center rounded-full bg-primary shadow-lg cursor-pointer">
+<i class="ri-robot-line ri-lg text-white"></i>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Tab switching
+const tabButtons = document.querySelectorAll('.tab-button');
+tabButtons.forEach(button => {
+button.addEventListener('click', function() {
+// Remove active class from all tabs
+tabButtons.forEach(btn => {
+btn.classList.remove('active');
+btn.classList.remove('text-primary');
+btn.classList.add('text-gray-400');
+});
+// Add active class to clicked tab
+this.classList.add('active');
+this.classList.remove('text-gray-400');
+this.classList.add('text-primary');
+});
+});
+// Command input handling
+const commandInput = document.querySelector('.command-input');
+commandInput.addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const command = this.value.trim();
+if (command) {
+// Process command (in a real app, this would trigger AI processing)
+console.log('Processing command:', command);
+// Clear input after processing
+this.value = '';
+// Show a temporary notification
+const notification = document.createElement('div');
+notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
+notification.textContent = `Processing: "${command}"`;
+document.body.appendChild(notification);
+// Remove notification after 3 seconds
+setTimeout(() => {
+notification.remove();
+}, 3000);
+}
+}
+});
+// AI suggestion apply buttons
+const applyButtons = document.querySelectorAll('.ai-suggestion button:last-child');
+applyButtons.forEach(button => {
+button.addEventListener('click', function() {
+const suggestion = this.closest('.ai-suggestion');
+// Add applied class to show it's been applied
+suggestion.style.opacity = '0.6';
+this.textContent = 'Applied';
+this.disabled = true;
+// In a real app, this would trigger the actual application of the suggestion
+});
+});
+// Timeline segment click handling
+const contentCreationSegment = document.getElementById('content-creation-segment');
+let activeContextMenu = null;
+document.addEventListener('click', function(e) {
+if (activeContextMenu && !activeContextMenu.contains(e.target) && !e.target.closest('.timeline-segment')) {
+activeContextMenu.classList.add('hidden');
+activeContextMenu = null;
+contentCreationSegment.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-gray-900');
+}
+});
+contentCreationSegment.addEventListener('click', function(e) {
+e.stopPropagation();
+// Remove highlight from other segments
+document.querySelectorAll('.timeline-segment').forEach(seg => {
+seg.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-gray-900');
+});
+// Add highlight to clicked segment
+this.classList.add('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-gray-900');
+// Show context menu
+const contextMenu = this.querySelector('.context-menu');
+if (activeContextMenu && activeContextMenu !== contextMenu) {
+activeContextMenu.classList.add('hidden');
+}
+contextMenu.classList.toggle('hidden');
+activeContextMenu = contextMenu.classList.contains('hidden') ? null : contextMenu;
+// Update editing panel content
+const editingPanel = document.querySelector('.ai-suggestion');
+if (editingPanel) {
+editingPanel.innerHTML = `
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-500/20 text-purple-400 mr-3">
+<i class="ri-movie-line"></i>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h4 class="text-white font-medium">Content Creation Segment</h4>
+<span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">Active</span>
+</div>
+<p class="text-sm text-gray-400 mb-3">This segment discusses AI in content creation. Consider adding relevant B-roll footage and captions to illustrate key points.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line"></i>
+<span>13:30 - 25:15</span>
+</div>
+</div>
+</div>
+</div>`;
+}
+// Seek video to segment start time
+const startTime = this.dataset.start;
+console.log('Seeking to:', startTime);
+});
+// Handle context menu button clicks
+document.querySelectorAll('.context-menu button').forEach(button => {
+button.addEventListener('click', function(e) {
+e.stopPropagation();
+const action = this.textContent.trim();
+console.log('Selected action:', action);
+// Show feedback notification
+const notification = document.createElement('div');
+notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
+notification.textContent = `Applying: ${action}`;
+document.body.appendChild(notification);
+setTimeout(() => {
+notification.remove();
+}, 3000);
+// Hide context menu after action
+this.closest('.context-menu').classList.add('hidden');
+activeContextMenu = null;
+});
+});
+// AI Assistant button
+const aiAssistantButton = document.querySelector('.ai-assistant-button');
+aiAssistantButton.addEventListener('click', function() {
+// In a real app, this would open an AI assistant panel or modal
+console.log('Opening AI assistant');
+// Show a temporary notification
+const notification = document.createElement('div');
+notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded shadow-lg z-50';
+notification.textContent = 'AI Assistant: How can I help with your video?';
+document.body.appendChild(notification);
+// Remove notification after 3 seconds
+setTimeout(() => {
+notification.remove();
+}, 3000);
+});
+});
+</script>
+</body>
+</html>
