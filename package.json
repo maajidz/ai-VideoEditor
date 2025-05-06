@@ -1,0 +1,23 @@
+{
+  "name": "ai-video-editor",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "turbo": "latest"
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.1.0"
+  }
+}
