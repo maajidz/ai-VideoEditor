@@ -24,6 +24,7 @@ position: relative;
 height: 24px;
 cursor: pointer;
 transition: all 0.2s;
+margin-bottom: 24px;
 }
 .timeline-segment:hover {
 transform: translateY(-2px);
@@ -277,15 +278,29 @@ transform: scale(1.1);
 <!-- Timeline Section -->
 <div class="bg-gray-900 border-t border-b border-gray-800 py-4">
 <div class="container mx-auto px-4">
-<div class="flex items-center justify-between mb-3">
-<h3 class="text-white font-medium">Timeline</h3>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center space-x-4">
+<h3 class="text-white font-medium text-lg">Timeline</h3>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2 text-sm text-gray-400">
+<i class="ri-time-line"></i>
+<span>Total Duration: 58:21</span>
+</div>
 <div class="flex items-center space-x-3">
-<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300" title="Zoom Out">
 <i class="ri-zoom-out-line"></i>
 </button>
-<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300" title="Zoom In">
 <i class="ri-zoom-in-line"></i>
 </button>
+</div>
+</div>
+</div>
+<div class="bg-gray-800/50 rounded-lg p-3 mb-3">
+<div class="flex items-center space-x-3 text-sm text-gray-400">
+<i class="ri-information-line text-primary"></i>
+<span>Click on any segment to view details and edit options. Hover over segments to preview content.</span>
 </div>
 </div>
 <div class="relative w-full h-24 bg-gray-800 rounded-lg overflow-hidden">
@@ -304,16 +319,40 @@ transform: scale(1.1);
 <!-- Timeline Segments -->
 <div class="absolute top-6 left-0 right-0 bottom-0 flex">
 <!-- Intro Segment -->
-<div class="timeline-segment w-[8%] bg-blue-500/40 border-r border-gray-700">
-<div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
-<img src="https://readdy.ai/api/search-image?query=podcast%20intro%20screen%20with%20logo%20and%20host%20introduction%2C%20professional%20lighting%2C%20studio%20environment&width=160&height=90&seq=2&orientation=landscape" alt="Intro thumbnail" class="w-full h-full object-cover rounded">
-<div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-1">
-Intro (0:00 - 4:45)
+<div class="timeline-segment w-[8%] bg-blue-500/40 border-r border-gray-700 group">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">Introduction</span>
+<div class="text-[10px] text-gray-500">0:00 - 4:45</div>
+</div>
+<div class="timeline-thumbnail w-64 bg-gray-900 rounded-lg shadow-xl">
+<div class="p-2">
+<img src="https://readdy.ai/api/search-image?query=podcast%20intro%20screen%20with%20logo%20and%20host%20introduction%2C%20professional%20lighting%2C%20studio%20environment&width=160&height=90&seq=2&orientation=landscape" alt="Intro thumbnail" class="w-full h-32 object-cover rounded">
+</div>
+<div class="p-3 border-t border-gray-800">
+<div class="flex items-center justify-between mb-2">
+<span class="text-white font-medium">Introduction</span>
+<span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">0:00 - 4:45</span>
+</div>
+<p class="text-sm text-gray-400 mb-2">Show opening, host introductions and episode overview</p>
+<div class="flex items-center space-x-2 text-xs text-gray-500">
+<div class="flex items-center space-x-1">
+<i class="ri-mic-line"></i>
+<span>2 Hosts</span>
+</div>
+<div class="flex items-center space-x-1">
+<i class="ri-movie-line"></i>
+<span>Opening Graphics</span>
+</div>
+</div>
 </div>
 </div>
 </div>
 <!-- Topic 1 Segment -->
-<div class="timeline-segment w-[15%] bg-green-500/40 border-r border-gray-700">
+<div class="timeline-segment w-[15%] bg-green-500/40 border-r border-gray-700 group">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">AI Basics</span>
+<div class="text-[10px] text-gray-500">4:45 - 13:30</div>
+</div>
 <div class="timeline-marker bg-blue-400"></div>
 <div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
 <img src="https://readdy.ai/api/search-image?query=two%20people%20discussing%20in%20podcast%20studio%2C%20close%20up%20shot%2C%20animated%20conversation%2C%20professional%20lighting&width=160&height=90&seq=3&orientation=landscape" alt="Topic 1 thumbnail" class="w-full h-full object-cover rounded">
@@ -324,6 +363,10 @@ AI Basics (4:45 - 13:30)
 </div>
 <!-- Topic 2 Segment -->
 <div id="content-creation-segment" class="timeline-segment w-[18%] bg-purple-500/40 border-r border-gray-700 relative group transition-all hover:bg-purple-500/60" data-start="13:30" data-end="25:15">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">Content Creation</span>
+<div class="text-[10px] text-gray-500">13:30 - 25:15</div>
+</div>
 <div class="timeline-marker bg-orange-400"></div>
 <div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
 <img src="https://readdy.ai/api/search-image?query=podcast%20b-roll%20showing%20AI%20technology%20visualization%2C%20digital%20interface%2C%20data%20visualization&width=160&height=90&seq=4&orientation=landscape" alt="Topic 2 thumbnail" class="w-full h-full object-cover rounded">
@@ -363,7 +406,11 @@ Content Creation (13:30 - 25:15)
 </div>
 </div>
 <!-- Interview Segment -->
-<div class="timeline-segment w-[22%] bg-yellow-500/40 border-r border-gray-700">
+<div class="timeline-segment w-[22%] bg-yellow-500/40 border-r border-gray-700 group">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">Expert Interview</span>
+<div class="text-[10px] text-gray-500">25:15 - 38:30</div>
+</div>
 <div class="timeline-marker bg-red-400"></div>
 <div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
 <img src="https://readdy.ai/api/search-image?query=podcast%20interview%20with%20guest%20expert%2C%20three%20people%20in%20conversation%2C%20professional%20studio%20setup%20with%20multiple%20camera%20angles&width=160&height=90&seq=5&orientation=landscape" alt="Interview thumbnail" class="w-full h-full object-cover rounded">
@@ -373,7 +420,11 @@ Expert Interview (25:15 - 38:30)
 </div>
 </div>
 <!-- Topic 3 Segment -->
-<div class="timeline-segment w-[20%] bg-teal-500/40 border-r border-gray-700">
+<div class="timeline-segment w-[20%] bg-teal-500/40 border-r border-gray-700 group">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">Future Trends</span>
+<div class="text-[10px] text-gray-500">38:30 - 50:15</div>
+</div>
 <div class="timeline-marker bg-green-400"></div>
 <div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
 <img src="https://readdy.ai/api/search-image?query=podcast%20hosts%20discussing%20future%20technology%2C%20animated%20hand%20gestures%2C%20close%20up%20shot%20with%20shallow%20depth%20of%20field&width=160&height=90&seq=6&orientation=landscape" alt="Topic 3 thumbnail" class="w-full h-full object-cover rounded">
@@ -383,7 +434,11 @@ Future Trends (38:30 - 50:15)
 </div>
 </div>
 <!-- Outro Segment -->
-<div class="timeline-segment w-[17%] bg-blue-500/40">
+<div class="timeline-segment w-[17%] bg-blue-500/40 group">
+<div class="absolute -bottom-8 left-0 right-0 text-center">
+<span class="text-xs text-gray-400">Conclusion</span>
+<div class="text-[10px] text-gray-500">50:15 - 58:21</div>
+</div>
 <div class="timeline-marker bg-purple-400"></div>
 <div class="timeline-thumbnail w-48 h-24 bg-gray-900 rounded p-2">
 <img src="https://readdy.ai/api/search-image?query=podcast%20outro%20with%20hosts%20concluding%20discussion%2C%20call%20to%20action%20graphics%2C%20professional%20lighting&width=160&height=90&seq=7&orientation=landscape" alt="Outro thumbnail" class="w-full h-full object-cover rounded">
@@ -401,14 +456,58 @@ Conclusion (50:15 - 58:21)
 <!-- Editing Tools Section -->
 <div class="flex-1 bg-gray-800">
 <div class="container mx-auto px-4 py-6">
-<div class="flex space-x-6">
-<!-- Left Column: Editing Panel -->
-<div class="w-2/3 bg-gray-900 rounded-lg overflow-hidden shadow-xl">
-<!-- Editing Panel Tabs -->
-<div class="flex items-center border-b border-gray-800 px-4">
-<button class="tab-button active px-4 py-3 text-primary font-medium">AI Suggestions</button>
-<button class="tab-button px-4 py-3 text-gray-400 hover:text-white">Text Editor</button>
-<button class="tab-button px-4 py-3 text-gray-400 hover:text-white">Tools</button>
+<div class="relative flex-1">
+<!-- Video Preview Area -->
+<div class="w-full aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-xl mb-6">
+<div class="w-full h-full flex items-center justify-center text-gray-600">
+<span>Video Preview Area</span>
+</div>
+</div>
+<!-- Floating Command Bar -->
+<div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[800px] z-50">
+<div class="bg-gray-900/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-800">
+<!-- Command Input -->
+<div class="p-4">
+<div class="relative flex items-center">
+<div class="absolute left-4 flex items-center space-x-2">
+<i class="ri-command-line text-gray-400"></i>
+</div>
+<input type="text" class="command-input w-full bg-gray-800 text-white pl-12 pr-32 py-3 rounded-xl border-none" placeholder="What would you like to do with your video?">
+<div class="absolute right-4 flex items-center space-x-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-700/50 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors">
+<i class="ri-mic-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+<i class="ri-send-plane-line"></i>
+</button>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="mt-3 flex items-center space-x-2 overflow-x-auto pb-2">
+<button class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors">
+<i class="ri-scissors-cut-line"></i>
+<span>Trim Video</span>
+</button>
+<button class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors">
+<i class="ri-text-spacing"></i>
+<span>Add Captions</span>
+</button>
+<button class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors">
+<i class="ri-movie-line"></i>
+<span>Add B-Roll</span>
+</button>
+<button class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors">
+<i class="ri-sound-module-line"></i>
+<span>Enhance Audio</span>
+</button>
+<button class="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors">
+<i class="ri-magic-line"></i>
+<span>AI Magic Fix</span>
+</button>
+</div>
+</div>
+</div>
+</div>
 </div>
 <!-- Command Bar -->
 <div class="p-4 border-b border-gray-800">
@@ -574,6 +673,140 @@ Conclusion (50:15 - 58:21)
 </div>
 <!-- Right Column: Source Manager -->
 <div class="w-1/3 space-y-6">
+<!-- Thumbnail Generator -->
+<div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+<div class="flex items-center justify-between border-b border-gray-800 px-4 py-3">
+<h3 class="text-white font-medium">AI Thumbnail Generator</h3>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white">
+<i class="ri-refresh-line"></i>
+</button>
+</div>
+<div class="p-4">
+<!-- Main Recommended Thumbnail -->
+<div class="mb-4">
+<div class="relative group">
+<img src="https://readdy.ai/api/search-image?query=excited%20host%20pointing%20at%20futuristic%20AI%20visualization%2C%20dramatic%20lighting%2C%20cutout%20person%20composited%20onto%20tech%20background%2C%20YouTube%20thumbnail%20style%2C%20high%20energy%20expression%2C%20professional%20quality&width=600&height=338&seq=13&orientation=landscape" alt="Main thumbnail" class="w-full h-48 object-cover rounded-lg">
+<div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-edit-line"></i>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-image-edit-line"></i>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-magic-line"></i>
+</button>
+</div>
+<!-- Editable Text Overlay -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative group cursor-text w-full px-6" id="thumbnail-title">
+<h3 class="text-[2.5rem] font-black text-white text-center leading-tight drop-shadow-[0_2px_20px_rgba(0,0,0,0.8)] uppercase" style="text-stroke: 2px black;">AI Revolution in Content Creation</h3>
+<div class="absolute right-6 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-magic-line"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-font-size-2"></i>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-white/20 hover:bg-white/30 text-white">
+<i class="ri-contrast-2-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Style Editor Panel -->
+<div class="hidden mt-4 bg-gray-800 rounded-lg p-4 space-y-4" id="title-suggestions">
+<!-- Font Styles -->
+<div class="space-y-2">
+<h4 class="text-sm text-gray-400 mb-2">Font Styles</h4>
+<div class="grid grid-cols-2 gap-2">
+<button class="px-3 py-2 bg-gray-700 rounded text-white text-lg font-black uppercase hover:bg-gray-600">Impact Style</button>
+<button class="px-3 py-2 bg-gray-700 rounded text-white text-lg font-bold italic hover:bg-gray-600">Dynamic Bold</button>
+<button class="px-3 py-2 bg-gray-700 rounded text-white text-lg font-extrabold hover:bg-gray-600 tracking-wider">Spaced Bold</button>
+<button class="px-3 py-2 bg-gray-700 rounded text-white text-lg font-black hover:bg-gray-600" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5)">Shadow Style</button>
+</div>
+</div>
+<!-- Title Suggestions -->
+<div class="space-y-2">
+<h4 class="text-sm text-gray-400 mb-2">Trending Titles</h4>
+<button class="w-full text-left px-3 py-2 text-lg font-black text-white hover:bg-gray-700 rounded uppercase">*SHOCKING* AI Changes Everything!</button>
+<button class="w-full text-left px-3 py-2 text-lg font-black text-white hover:bg-gray-700 rounded uppercase">AI Secrets REVEALED!</button>
+<button class="w-full text-left px-3 py-2 text-lg font-black text-white hover:bg-gray-700 rounded uppercase">This AI Tool Changes EVERYTHING</button>
+</div>
+<!-- AI Generated Stickers -->
+<div class="space-y-2">
+<h4 class="text-sm text-gray-400 mb-2">AI Generated Stickers</h4>
+<div class="grid grid-cols-4 gap-2">
+<div class="aspect-square bg-gray-700 rounded-lg p-2 hover:bg-gray-600 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=excited%20person%20pointing%20upward%2C%20cutout%20style%2C%20transparent%20background%2C%20dramatic%20expression&width=100&height=100&seq=20&orientation=squarish" class="w-full h-full object-contain" alt="Excited host">
+</div>
+<div class="aspect-square bg-gray-700 rounded-lg p-2 hover:bg-gray-600 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=shocked%20face%20with%20hands%20on%20cheeks%2C%20cutout%20style%2C%20transparent%20background%2C%20dramatic%20reaction&width=100&height=100&seq=21&orientation=squarish" class="w-full h-full object-contain" alt="Shocked reaction">
+</div>
+<div class="aspect-square bg-gray-700 rounded-lg p-2 hover:bg-gray-600 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=arrow%20pointing%20effect%2C%20neon%20style%2C%20transparent%20background&width=100&height=100&seq=22&orientation=squarish" class="w-full h-full object-contain" alt="Arrow effect">
+</div>
+<div class="aspect-square bg-gray-700 rounded-lg p-2 hover:bg-gray-600 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=explosion%20effect%20sticker%2C%20comic%20style%2C%20transparent%20background&width=100&height=100&seq=23&orientation=squarish" class="w-full h-full object-contain" alt="Effect sticker">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Thumbnail Options -->
+<div class="grid grid-cols-3 gap-2">
+<div class="relative group cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=podcast%20hosts%20engaged%20in%20animated%20discussion%2C%20close%20up%20shot%2C%20professional%20lighting%2C%20dynamic%20composition&width=200&height=113&seq=14&orientation=landscape" alt="Thumbnail option 1" class="w-full aspect-video object-cover rounded">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity rounded"></div>
+</div>
+<div class="relative group cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=technology%20visualization%20with%20podcast%20hosts%20in%20background%2C%20modern%20studio%20setup%2C%20professional%20equipment&width=200&height=113&seq=15&orientation=landscape" alt="Thumbnail option 2" class="w-full aspect-video object-cover rounded">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity rounded"></div>
+</div>
+<div class="relative group cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=podcast%20studio%20environment%20with%20AI%20visualization%20overlay%2C%20professional%20lighting%2C%20engaging%20composition&width=200&height=113&seq=16&orientation=landscape" alt="Thumbnail option 3" class="w-full aspect-video object-cover rounded">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity rounded"></div>
+</div>
+</div>
+<!-- Advanced Style Controls -->
+<div class="mt-4 space-y-4">
+<div class="space-y-3">
+<h4 class="text-sm text-gray-400">Image Adjustments</h4>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Brightness</span>
+<input type="range" min="0" max="100" value="50" class="w-32">
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-500">Contrast</span>
+<input type="range" min="0" max="100" value="50" class="w-32">
+</div>
+</div>
+<div class="space-y-3">
+<h4 class="text-sm text-gray-400">Text Effects</h4>
+<div class="grid grid-cols-3 gap-2">
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">Outline</button>
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">Glow</button>
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">Shadow</button>
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">Gradient</button>
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">3D</button>
+<button class="p-2 bg-gray-800 rounded text-xs text-gray-400 hover:bg-gray-700 hover:text-white">Neon</button>
+</div>
+</div>
+<div class="space-y-3">
+<h4 class="text-sm text-gray-400">Layout</h4>
+<div class="grid grid-cols-2 gap-2">
+<button class="p-2 bg-gray-800 rounded text-center text-xs text-gray-400 hover:bg-gray-700 hover:text-white flex items-center justify-center">
+<i class="ri-layout-left-line mr-1"></i>Left Split
+</button>
+<button class="p-2 bg-gray-800 rounded text-center text-xs text-gray-400 hover:bg-gray-700 hover:text-white flex items-center justify-center">
+<i class="ri-layout-right-line mr-1"></i>Right Split
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
 <!-- Source Manager -->
 <div class="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
 <div class="flex items-center justify-between border-b border-gray-800 px-4 py-3">
@@ -774,6 +1007,64 @@ Conclusion (50:15 - 58:21)
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+// Command input handling
+const commandInput = document.querySelector('.command-input');
+commandInput.addEventListener('keypress', function(e) {
+if (e.key === 'Enter') {
+const command = this.value.trim();
+if (command) {
+// Process command
+console.log('Processing command:', command);
+this.value = '';
+// Show processing feedback
+const notification = document.createElement('div');
+notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-300';
+notification.textContent = `Processing: "${command}"`;
+document.body.appendChild(notification);
+setTimeout(() => {
+notification.style.opacity = '0';
+setTimeout(() => notification.remove(), 300);
+}, 2700);
+}
+}
+});
+// Quick action buttons
+document.querySelectorAll('.mt-3 button').forEach(button => {
+button.addEventListener('click', function() {
+const action = this.querySelector('span').textContent;
+commandInput.value = action;
+commandInput.focus();
+});
+});
+document.addEventListener('click', function(e) {
+if (!thumbnailTitle.contains(e.target)) {
+titleSuggestions.classList.add('hidden');
+}
+});
+document.querySelectorAll('#title-suggestions button').forEach(button => {
+button.addEventListener('click', function() {
+const title = this.textContent.trim();
+thumbnailTitle.querySelector('h3').textContent = title;
+titleSuggestions.classList.add('hidden');
+});
+});
+// Thumbnail option selection
+document.querySelectorAll('.grid.grid-cols-3 .group').forEach(thumbnail => {
+thumbnail.addEventListener('click', function() {
+const mainThumbnail = document.querySelector('.mb-4 img');
+const newSrc = this.querySelector('img').src;
+mainThumbnail.src = newSrc;
+});
+});
+// Fine-grained controls
+document.querySelectorAll('input[type="range"]').forEach(range => {
+range.addEventListener('input', function() {
+const mainThumbnail = document.querySelector('.mb-4 img');
+const value = this.value;
+const property = this.previousElementSibling.textContent.toLowerCase();
+mainThumbnail.style.filter = `${property}(${value}%)`;
+});
+});
 // Tab switching
 const tabButtons = document.querySelectorAll('.tab-button');
 tabButtons.forEach(button => {
